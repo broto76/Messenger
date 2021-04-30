@@ -1,9 +1,10 @@
 package com.broto.messenger
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.broto.messenger.Constants.Companion.FIREBASE_DATABASE
 import com.broto.messenger.model.FirebaseMessage
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_chat_data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class ChatDataActivity : AppCompatActivity() {
 
@@ -41,8 +43,17 @@ class ChatDataActivity : AppCompatActivity() {
         Log.d(TAG, "userId: $userId")
         Log.d(TAG, "remoteUserId: $remoteUserId")
 
+        setAdjustScreen()
         setUpRecyclerView()
-        fetchNodeName()
+//        fetchNodeName()
+        addFirebaseDatabaseListener()
+
+    }
+
+    private fun setAdjustScreen() {
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        /*android:windowSoftInputMode="adjustPan|adjustResize"*/
     }
 
     private fun setUpRecyclerView() {
@@ -52,7 +63,9 @@ class ChatDataActivity : AppCompatActivity() {
     }
 
     private fun addFirebaseDatabaseListener() {
+        messageNodeKey = Utility.getFirebaseMessageKeyName(userId, remoteUserId)
         Log.d(TAG, "addFirebaseDatabaseListener: $messageNodeKey")
+        database = Firebase.database(FIREBASE_DATABASE)
         mChatReference = database.getReference(messageNodeKey)
 
         mChatReferenceListener = object: ChildEventListener {
@@ -74,6 +87,7 @@ class ChatDataActivity : AppCompatActivity() {
                 if (message != null) {
                     mMessages.add(message)
                     mMessagesAdapter.notifyDataSetChanged()
+                    rv_message_list.smoothScrollToPosition(mMessages.size -1)
                 }
             }
 
@@ -84,6 +98,7 @@ class ChatDataActivity : AppCompatActivity() {
                 mMessages = ArrayList(updatedList)
                 mMessagesAdapter.updateMessageList(mMessages)
                 mMessagesAdapter.notifyDataSetChanged()
+                rv_message_list.smoothScrollToPosition(mMessages.size -1)
             }
 
         }
@@ -92,45 +107,45 @@ class ChatDataActivity : AppCompatActivity() {
 
     }
 
-    private fun fetchNodeName() {
-        database = Firebase.database(FIREBASE_DATABASE)
-        val key1 = userId + "_" + remoteUserId
-        val key2 = remoteUserId + "_" + userId
-
-        val reference1 = database.getReference(key1)
-        val reference2 = database.getReference(key2)
-
-        reference1.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d(TAG, "$key1 child: ${snapshot.hasChildren()}")
-                if (snapshot.hasChildren()) {
-                    messageNodeKey = key1
-                    addFirebaseDatabaseListener()
-                }
-                reference1.removeEventListener(this)
-            }
-
-        })
-
-        reference2.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d(TAG, "$key2 child: ${snapshot.hasChildren()}")
-                if (snapshot.hasChildren()) {
-                    messageNodeKey = key2
-                    addFirebaseDatabaseListener()
-                }
-                reference2.removeEventListener(this)
-            }
-        })
-    }
+//    private fun fetchNodeName() {
+//        database = Firebase.database(FIREBASE_DATABASE)
+//        val key1 = userId + "_" + remoteUserId
+//        val key2 = remoteUserId + "_" + userId
+//
+//        val reference1 = database.getReference(key1)
+//        val reference2 = database.getReference(key2)
+//
+//        reference1.addValueEventListener(object : ValueEventListener {
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                Log.d(TAG, "$key1 child: ${snapshot.hasChildren()}")
+//                if (snapshot.hasChildren()) {
+//                    messageNodeKey = key1
+//                    addFirebaseDatabaseListener()
+//                }
+//                reference1.removeEventListener(this)
+//            }
+//
+//        })
+//
+//        reference2.addValueEventListener(object : ValueEventListener {
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                Log.d(TAG, "$key2 child: ${snapshot.hasChildren()}")
+//                if (snapshot.hasChildren()) {
+//                    messageNodeKey = key2
+//                    addFirebaseDatabaseListener()
+//                }
+//                reference2.removeEventListener(this)
+//            }
+//        })
+//    }
 
     fun sendMessage(view: View) {
         val message = et_message_data.text.toString()
@@ -138,11 +153,11 @@ class ChatDataActivity : AppCompatActivity() {
             return
         }
 
-        if (messageNodeKey.isEmpty()) {
-            messageNodeKey = userId + "_" + remoteUserId
-            addFirebaseDatabaseListener()
-            Log.d(TAG,"Empty messageNodeKey is updated with $messageNodeKey")
-        }
+//        if (messageNodeKey.isEmpty()) {
+//            messageNodeKey = userId + "_" + remoteUserId
+//            addFirebaseDatabaseListener()
+//            Log.d(TAG,"Empty messageNodeKey is updated with $messageNodeKey")
+//        }
 
         val currentStamp = System.currentTimeMillis()
         val messageObject = FirebaseMessage(message, userId, currentStamp)

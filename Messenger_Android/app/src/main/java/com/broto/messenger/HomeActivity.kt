@@ -10,6 +10,7 @@ import com.broto.messenger.jsonResponseModels.AllFriendsResponse
 import com.broto.messenger.retrofitServices.UserdataService
 import com.broto.messenger.retrofitServices.Utility
 import com.broto.messenger.jsonResponseModels.UserDetailsResponse
+import com.broto.messenger.services.CoreService
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,12 +34,18 @@ class HomeActivity : AppCompatActivity() {
         ll_home_username.visibility = View.INVISIBLE
 
         populateUserName()
-//        populateFriendData()
+
+        CoreService.getInstance()?.mIsHomeActivityRunning = true
     }
 
     override fun onResume() {
         super.onResume()
         populateFriendData()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        CoreService.getInstance()?.mIsHomeActivityRunning = false
     }
 
     private fun populateUserName() {

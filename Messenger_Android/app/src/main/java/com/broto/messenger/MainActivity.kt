@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.broto.messenger.services.CoreService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,25 +18,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(Constants.DELAY_SPLASH_SCREEN)
-            checkLoginCredentials()
-        }
+        startService()
+        startPollingService()
     }
 
-    private fun checkLoginCredentials() {
-        val loginToken = Utility.getPreference(Constants.SP_KEY_LOGIN_TOKEN, applicationContext)
-        val userId = Utility.getPreference(Constants.SP_KEY_LOGIN_USERID, applicationContext)
+    private fun startService() {
+        startService(Intent(this, CoreService::class.java))
+    }
 
-        Log.d(TAG, "Token: $loginToken")
-        if (loginToken.isEmpty() || userId.isEmpty()) {
-            // Goto login page
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        } else {
-            // Goto homepage
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
+    private fun startPollingService() {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            while (CoreService.getInstance() == null) {
+                delay(100)
+            }
+            CoreService.getInstance()?.checkTokenValid(object: CoreService.JobCompleteCallback {
+                override fun onjobcompleted(status: Int) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        // Goto Main Thread
+                        if (status == CoreService.JobCompleteCallback.RESPONSE_SUCCESS) {
+                            // Verification Success
+                            Log.d(TAG, "Token is valid. Goto HomeScreen")
+                            startActivity(Intent(this@MainActivity,
+                                HomeActivity::class.java))
+                            finish()
+                        } else {
+                            // Verification failed
+                            Log.d(TAG, "Token is invalid. Goto LoginScreen")
+                            startActivity(Intent(this@MainActivity,
+                                LoginActivity::class.java))
+                            finish()
+                        }
+                    }
+                }
+            })
         }
     }
 }

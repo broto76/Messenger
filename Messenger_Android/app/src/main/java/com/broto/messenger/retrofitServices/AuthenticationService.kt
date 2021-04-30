@@ -1,9 +1,6 @@
 package com.broto.messenger.retrofitServices
 
-import com.broto.messenger.jsonResponseModels.LoginRequest
-import com.broto.messenger.jsonResponseModels.LoginResponse
-import com.broto.messenger.jsonResponseModels.SignupRequest
-import com.broto.messenger.jsonResponseModels.SignupResponse
+import com.broto.messenger.jsonResponseModels.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -19,4 +16,9 @@ interface AuthenticationService {
     fun postSignup(
         @Body request: SignupRequest
     ) : Call<SignupResponse>
+
+    @POST("auth/tokenValidity")
+    fun postTokenValidity(
+        @Body request: PostTokenValidityRequest
+    ) : Call<PostTokenValidityResponse>
 }
