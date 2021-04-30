@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#5548EF</color>
+    <color name="colorPrimaryLight">#8E85E9</color>
+    <color name="colorPrimaryDark">#3933C7</color>
+
+    <color name="colorAccent">#5BA834</color>
+    <color name="colorAccentLight">#C0D5AE</color>
+    <color name="colorAccentDark">#2D6D0C</color>
+
+    <color name="colorMessageSentBg">#D2EEC2</color>
+    <color name="colorMessageSentStroke">#4FE600</color>
+    <color name="colorMessageReceivedBg">#C0BEEB</color>
+    <color name="colorMessageReceivedStroke">#1511DD</color>
+</resources>
