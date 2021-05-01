@@ -5,7 +5,7 @@ const authController = require('../controller/authController');
 
 const authRouter = express.Router();
 
-
+authRouter.post('/register', authController.postRegister);
 authRouter.post('/login', authController.postLogin);
 /**
  * return {
@@ -14,7 +14,16 @@ authRouter.post('/login', authController.postLogin);
  * }
  * 
  */
-authRouter.post('/register', authController.postRegister);
+
+authRouter.post('/tokenValidity', authController.postTokenValidity);
+/**
+ * 
+ * return {
+ *      tokenStatus: "valid"/"invalid"
+ *      userId: user._id/""
+ * }
+ * 
+ */
 
 
 module.exports = authRouter;

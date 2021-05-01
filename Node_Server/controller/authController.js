@@ -130,3 +130,51 @@ exports.postRegister = async (req, res, next) => {
         });
     }
 }
+
+exports.postTokenValidity = async (req, res, next) => {
+    const token = req.body.token;
+    if (!token) {
+        console.log('No token found');
+        return res.status(422).json({
+            tokenStatus: 'invalid',
+            userId: ''
+        });
+    }
+
+    let decodedData;
+
+    try {
+        decodedData = jwt.verify(token, creds.JWT_SECRET_TOKEN);
+    } catch (error) {
+        console.log('Error while verifying JWT. Error: ' + error);
+        return res.status(401).json({
+            tokenStatus: 'invalid',
+            userId: ''
+        });
+    }
+    if(!decodedData) {
+        console.log('Invalid token');
+        return res.status(401).json({
+            tokenStatus: 'invalid',
+            userId: ''
+        });
+    }
+
+    console.log("Decoded phoneNumber: " + decodedData.phoneNumber);
+
+    const user = await User.findOne({
+        phoneNumber: decodedData.phoneNumber
+    });
+    if (!user) {
+        console.log('Current User not in database');
+        return res.status(404).json({
+            tokenStatus: 'invalid',
+            userId: ''
+        });
+    }
+
+    res.status(200).json({
+        tokenStatus: 'valid',
+            userId: user._id.toString()
+    });
+}
