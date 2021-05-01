@@ -1,11 +1,22 @@
 package com.broto.messenger.model
 
 data class FirebaseMessage (
-    var MessageData: String? = null,
-    var Sender: String? = null,
-    var Timestamp: Long? = null
+    var messageData: String? = null,
+    var sender: String? = null,
+    var timestamp: Long? = null,
+    var isRead: Boolean? = null
 ) {
     override fun toString(): String {
-        return "Message: $MessageData ** Sender: $Sender ** TimeStamp: $Timestamp"
+        return "Message: $messageData ** Sender: $sender ** TimeStamp: $timestamp ** isRead: $isRead"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is FirebaseMessage) {
+            return false
+        }
+        var item: FirebaseMessage = other
+        return (this.messageData == item.messageData &&
+                this.sender == item.sender &&
+                this.timestamp == item.timestamp)
     }
 }

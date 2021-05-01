@@ -13,6 +13,7 @@ import com.broto.messenger.model.FirebaseMessage
 class MessageListAdapter(
     var mMessages: ArrayList<FirebaseMessage>,
     var mUserId: String,
+    var itemCallback: ItemClickedListener,
     var context: Context
 ) :
     RecyclerView.Adapter<MessageListAdapter.MessageHolder>() {
@@ -28,14 +29,17 @@ class MessageListAdapter(
 
     override fun onBindViewHolder(holder: MessageHolder, position: Int) {
         val item = mMessages[position]
-        holder.message.text = item.MessageData
+        holder.message.text = item.messageData
 
-        if (mUserId == item.Sender) {
+        if (mUserId == item.sender) {
             holder.chat_viewgroup.gravity = Gravity.RIGHT
             holder.message.background = context.getDrawable(R.drawable.message_sent_item_background)
         } else {
             holder.chat_viewgroup.gravity = Gravity.LEFT
             holder.message.background = context.getDrawable(R.drawable.message_received_item_background)
+        }
+        holder.chat_viewgroup.setOnClickListener {
+            itemCallback.onItemClicked(item)
         }
     }
 
@@ -46,5 +50,9 @@ class MessageListAdapter(
     inner class MessageHolder(view: View): RecyclerView.ViewHolder(view) {
         var chat_viewgroup = view.findViewById<RelativeLayout>(R.id.rl_chat_item)
         var message = view.findViewById<TextView>(R.id.tv_chat_item_message)
+    }
+
+    interface ItemClickedListener {
+        fun onItemClicked(item: FirebaseMessage)
     }
 }

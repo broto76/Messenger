@@ -113,6 +113,11 @@ class FindFriendActivity : AppCompatActivity() {
             }
         } else if (friend.status == UserStatus.UNKNOWN) {
             // Not friend. Show send request option.
+            if (friend.user._id == com.broto.messenger.Utility.getPreference(Constants.SP_KEY_LOGIN_USERID, this)) {
+                Log.d(TAG, "This is the current user.")
+                tv_friend_query_result_name.text = tv_friend_query_result_name.text.toString() + "\n(current user)"
+                return
+            }
             Log.d(TAG, "Not friend. Show send request option.")
             btn_friend_query_result_send_request.text = "Send Request"
             btn_friend_query_result_send_request.visibility = View.VISIBLE

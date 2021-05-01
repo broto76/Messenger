@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.broto.messenger.Constants.Companion.FIREBASE_DATABASE
 import com.broto.messenger.model.FirebaseMessage
 import com.google.firebase.database.*
@@ -17,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class ChatDataActivity : AppCompatActivity() {
+class ChatDataActivity : AppCompatActivity(), MessageListAdapter.ItemClickedListener {
 
     private val TAG = "ChatDataActivity"
 
@@ -45,7 +46,6 @@ class ChatDataActivity : AppCompatActivity() {
 
         setAdjustScreen()
         setUpRecyclerView()
-//        fetchNodeName()
         addFirebaseDatabaseListener()
 
     }
@@ -53,13 +53,15 @@ class ChatDataActivity : AppCompatActivity() {
     private fun setAdjustScreen() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-        /*android:windowSoftInputMode="adjustPan|adjustResize"*/
     }
 
     private fun setUpRecyclerView() {
-        mMessagesAdapter = MessageListAdapter(mMessages, userId, this)
+        mMessagesAdapter = MessageListAdapter(mMessages, userId, this, this)
         rv_message_list.adapter = mMessagesAdapter
-        rv_message_list.layoutManager = LinearLayoutManager(this)
+        val lm = LinearLayoutManager(this)
+        lm.stackFromEnd = true
+        lm.reverseLayout = false
+        rv_message_list.layoutManager = lm
     }
 
     private fun addFirebaseDatabaseListener() {
@@ -70,15 +72,20 @@ class ChatDataActivity : AppCompatActivity() {
 
         mChatReferenceListener = object: ChildEventListener {
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                return
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+                return
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+                val newMessage = snapshot.getValue(FirebaseMessage::class.java)
+                val message = mMessages.find {
+                    it.timestamp == newMessage?.timestamp
+                }
+                message?.messageData = newMessage?.messageData
+                mMessagesAdapter.notifyDataSetChanged()
             }
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -88,12 +95,13 @@ class ChatDataActivity : AppCompatActivity() {
                     mMessages.add(message)
                     mMessagesAdapter.notifyDataSetChanged()
                     rv_message_list.smoothScrollToPosition(mMessages.size -1)
+                    updateMessageReadStatus(message, snapshot.key)
                 }
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 val updatedList = mMessages.filter {
-                    it.Timestamp != snapshot.getValue(FirebaseMessage::class.java)?.Timestamp
+                    it.timestamp != snapshot.getValue(FirebaseMessage::class.java)?.timestamp
                 }
                 mMessages = ArrayList(updatedList)
                 mMessagesAdapter.updateMessageList(mMessages)
@@ -107,60 +115,14 @@ class ChatDataActivity : AppCompatActivity() {
 
     }
 
-//    private fun fetchNodeName() {
-//        database = Firebase.database(FIREBASE_DATABASE)
-//        val key1 = userId + "_" + remoteUserId
-//        val key2 = remoteUserId + "_" + userId
-//
-//        val reference1 = database.getReference(key1)
-//        val reference2 = database.getReference(key2)
-//
-//        reference1.addValueEventListener(object : ValueEventListener {
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                Log.d(TAG, "$key1 child: ${snapshot.hasChildren()}")
-//                if (snapshot.hasChildren()) {
-//                    messageNodeKey = key1
-//                    addFirebaseDatabaseListener()
-//                }
-//                reference1.removeEventListener(this)
-//            }
-//
-//        })
-//
-//        reference2.addValueEventListener(object : ValueEventListener {
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                Log.d(TAG, "$key2 child: ${snapshot.hasChildren()}")
-//                if (snapshot.hasChildren()) {
-//                    messageNodeKey = key2
-//                    addFirebaseDatabaseListener()
-//                }
-//                reference2.removeEventListener(this)
-//            }
-//        })
-//    }
-
     fun sendMessage(view: View) {
         val message = et_message_data.text.toString()
         if (message.isEmpty()) {
             return
         }
 
-//        if (messageNodeKey.isEmpty()) {
-//            messageNodeKey = userId + "_" + remoteUserId
-//            addFirebaseDatabaseListener()
-//            Log.d(TAG,"Empty messageNodeKey is updated with $messageNodeKey")
-//        }
-
         val currentStamp = System.currentTimeMillis()
-        val messageObject = FirebaseMessage(message, userId, currentStamp)
+        val messageObject = FirebaseMessage(message, userId, currentStamp, false)
         val messageKey = messageNodeKey + "_" + currentStamp
         CoroutineScope(Dispatchers.IO).launch {
             mChatReference?.child(messageKey)?.setValue(messageObject)
@@ -169,10 +131,29 @@ class ChatDataActivity : AppCompatActivity() {
 
     }
 
+    fun updateMessageReadStatus(message: FirebaseMessage?, key: String?) {
+        if (message == null || key == null) {
+            return
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            message.isRead = true
+            mChatReference?.child(key)?.setValue(message)
+        }
+
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (mChatReferenceListener != null) {
             mChatReference?.removeEventListener(mChatReferenceListener!!)
         }
+    }
+
+    override fun onItemClicked(item: FirebaseMessage) {
+//        val messageKey = messageNodeKey + "_" + item.Timestamp.toString()
+//        item.MessageData = item.MessageData + "1"
+//        mChatReference?.child(messageKey)?.setValue(item)
+        return
     }
 }

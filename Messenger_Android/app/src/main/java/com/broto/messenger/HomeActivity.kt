@@ -10,6 +10,7 @@ import com.broto.messenger.jsonResponseModels.AllFriendsResponse
 import com.broto.messenger.retrofitServices.UserdataService
 import com.broto.messenger.retrofitServices.Utility
 import com.broto.messenger.jsonResponseModels.UserDetailsResponse
+import com.broto.messenger.model.HomeFriendList
 import com.broto.messenger.services.CoreService
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.CoroutineScope
@@ -24,8 +25,8 @@ class HomeActivity : AppCompatActivity() {
     private val TAG = "HomeActivity"
     private var mUserDetails: UserDetailsResponse? = null
 
-    private var mFriendList: List<AllFriendsResponse.FriendDetails>? = null
-    private lateinit var friendListAdapter: FriendChatListAdapter
+    private var mFriendList: ArrayList<HomeFriendList> = ArrayList()
+    private var friendListAdapter: FriendChatListAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +37,18 @@ class HomeActivity : AppCompatActivity() {
         populateUserName()
 
         CoreService.getInstance()?.mIsHomeActivityRunning = true
+        CoreService.getInstance()?.setuserId(
+            com.broto.messenger.Utility.getPreference(Constants.SP_KEY_LOGIN_USERID, this))
     }
 
     override fun onResume() {
         super.onResume()
         populateFriendData()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        CoreService.getInstance()?.unregisterMonitorUnreadMessages()
     }
 
     override fun onDestroy() {
@@ -83,7 +91,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun populateFriendData() {
-        rv_friend_list.visibility = View.INVISIBLE
+        rv_friend_list.visibility = View.GONE
         rv_friend_list.layoutManager = LinearLayoutManager(this)
 
         val loginToken = com.broto.messenger.Utility.getPreference(Constants.SP_KEY_LOGIN_TOKEN,
@@ -109,7 +117,11 @@ class HomeActivity : AppCompatActivity() {
 
                 if ((response?.code()?:0) == 200) {
                     //tv_username.text = "Welcome\n${body?.name}"
-                    mFriendList = body?.friendList
+                    //mFriendList = body?.friendList
+                    mFriendList.clear()
+                    body?.friendList?.forEach {
+                        mFriendList.add(HomeFriendList(it.name, it.phoneNumber, it._id, 0))
+                    }
                     populateFriendList()
                 }
             }
@@ -119,10 +131,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun populateFriendList() {
         CoroutineScope(Dispatchers.Main).launch {
-            friendListAdapter = FriendChatListAdapter(mFriendList!!, this@HomeActivity)
+            friendListAdapter = FriendChatListAdapter(mFriendList, this@HomeActivity)
             rv_friend_list.adapter = friendListAdapter
-            friendListAdapter.notifyDataSetChanged()
+            friendListAdapter?.notifyDataSetChanged()
             rv_friend_list.visibility = View.VISIBLE
+            CoreService.getInstance()?.registerMonitorUnreadMessages(mFriendList, friendListAdapter!!)
         }
     }
 
