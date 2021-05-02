@@ -137,8 +137,12 @@ class ChatDataActivity : AppCompatActivity(), MessageListAdapter.ItemClickedList
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            message.isRead = true
-            mChatReference?.child(key)?.setValue(message)
+            if (message.sender == userId) {
+                Log.d(TAG, "Dont update read status from owner.")
+            } else {
+                message.isRead = true
+                mChatReference?.child(key)?.setValue(message)
+            }
         }
 
     }
