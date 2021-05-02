@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:background="@drawable/friend_item_background"
+    android:id="@+id/rl_list_item"
+    android:layout_margin="10dp"
+    >
+
+    <TextView
+        android:id="@+id/tv_user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:id="@+id/tv_friend_name"
+        android:layout_alignParentTop="true"
+        android:textSize="30sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(9876543210)"
+        android:id="@+id/tv_friend_number"
+        android:layout_below="@id/tv_friend_name"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        >
+
+        <ImageButton
+            android:id="@+id/pending_request_item_accept_request"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_accept_primary"
+            android:background="@drawable/transparent_primary_bg"
+            />
+
+        <ImageButton
+            android:id="@+id/pending_request_item_reject_request"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_reject_primary"
+            android:background="@drawable/transparent_primary_bg"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

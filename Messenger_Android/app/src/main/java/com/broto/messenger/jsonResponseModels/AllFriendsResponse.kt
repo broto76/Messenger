@@ -3,7 +3,7 @@ package com.broto.messenger.jsonResponseModels
 import com.google.gson.annotations.SerializedName
 
 data class AllFriendsResponse (
-    @SerializedName("list") val friendList: List<FriendDetails>
+    @SerializedName("list") val returnList: List<FriendDetails>
 ) {
     data class FriendDetails (
         @SerializedName("name") val name: String,

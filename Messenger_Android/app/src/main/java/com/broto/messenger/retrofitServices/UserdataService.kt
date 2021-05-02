@@ -33,4 +33,9 @@ interface UserdataService {
         @Header("Authorization") token: String,
         @Body body: PostAcceptMessageRequest
     ): Call<PostAcceptMessageResponse>
+
+    @GET("allRequests")
+    fun getAllRequests(
+        @Header("Authorization") token: String
+    ): Call<GetAllRequestsResponse>
 }

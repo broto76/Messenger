@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.broto.messenger.*
+import com.broto.messenger.jsonResponseModels.GetAllRequestsResponse
 import com.broto.messenger.jsonResponseModels.PostTokenValidityRequest
 import com.broto.messenger.jsonResponseModels.PostTokenValidityResponse
 import com.broto.messenger.model.FirebaseMessage
 import com.broto.messenger.model.HomeFriendList
 import com.broto.messenger.retrofitServices.AuthenticationService
+import com.broto.messenger.retrofitServices.UserdataService
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -30,6 +32,8 @@ class CoreService : Service() {
     var mFirebaseChatReferenceList: ArrayList<DatabaseReference> = ArrayList()
 
     var mAdapter: FriendChatListAdapter? = null
+
+    var mPendingRequestList: ArrayList<GetAllRequestsResponse.RequestedUserDetails> = ArrayList()
 
     companion object {
 
@@ -111,7 +115,7 @@ class CoreService : Service() {
         }
     }
 
-    fun registerMonitorUnreadMessages(list: ArrayList<HomeFriendList>, adapter: FriendChatListAdapter) {
+    @Synchronized fun registerMonitorUnreadMessages(list: ArrayList<HomeFriendList>, adapter: FriendChatListAdapter) {
         if (mFirebaseChatReferenceList.isNotEmpty() && mFirebaseChildEventListenerList.isNotEmpty()) {
             cleanUpUnreadMonitor()
         }
@@ -211,6 +215,33 @@ class CoreService : Service() {
         }
         super.onDestroy()
         Log.d(TAG, "onDestroy")
+    }
+
+
+    fun fetchPendingRequestsRemote(callback: JobCompleteCallback) {
+        val loginToken = Utility.getPreference(Constants.SP_KEY_LOGIN_TOKEN, applicationContext)
+        val webService = com.broto.messenger.retrofitServices.Utility.getRetrofitService()
+            .create(UserdataService::class.java)
+
+        webService.getAllRequests(loginToken).enqueue(object: Callback<GetAllRequestsResponse> {
+            override fun onFailure(call: Call<GetAllRequestsResponse>?, t: Throwable?) {
+                Log.e(TAG, "GetAllRequests Failed. Message: ${t?.message}")
+                callback.onjobcompleted(JobCompleteCallback.RESPONSE_FAILED)
+            }
+
+            override fun onResponse(
+                call: Call<GetAllRequestsResponse>?,
+                response: Response<GetAllRequestsResponse>?
+            ) {
+                Log.d(TAG, "PostTokenValidity ResponseCode: ${response?.code()}")
+                Log.d(TAG, "PostTokenValidity response: ${response?.body()}")
+                if (response?.body()?.returnList != null) {
+                    mPendingRequestList = java.util.ArrayList(response.body().returnList)
+                    callback.onjobcompleted(JobCompleteCallback.RESPONSE_SUCCESS)
+                }
+            }
+
+        })
     }
 
     interface JobCompleteCallback {

@@ -6,44 +6,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HomeActivity">
 
-    <LinearLayout
-        android:id="@+id/ll_home_username"
+    <RelativeLayout
         android:layout_alignParentTop="true"
-        android:padding="10dp"
-        android:layout_margin="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/home_username_bg"
-        >
+        android:id="@+id/rl_home_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_home_username"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:layout_margin="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/home_username_bg"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/colorAccentDark"
+                android:textAlignment="center"
+                />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_gravity="center"
+                android:textSize="25sp"
+                android:textColor="@color/colorAccentDark"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_request_flicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome"
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:textColor="@color/colorAccentDark"
-            android:textAlignment="center"
+            android:src="@drawable/ic_person_solid_primary_color"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
             />
 
-        <TextView
-            android:id="@+id/tv_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_gravity="center"
-            android:textSize="25sp"
-            android:textColor="@color/colorAccentDark"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            />
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_margin="10dp"
-        android:layout_below="@id/ll_home_username"
+        android:layout_below="@id/rl_home_username"
         android:id="@+id/rv_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -15,18 +15,22 @@ import com.broto.messenger.services.CoreService
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), CoreService.JobCompleteCallback {
 
     private val TAG = "HomeActivity"
     private var mUserDetails: UserDetailsResponse? = null
 
     private var mFriendList: ArrayList<HomeFriendList> = ArrayList()
     private var friendListAdapter: FriendChatListAdapter? = null
+
+    var isInForeground = false
+    var isRequestActivityOpened = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +47,17 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        synchronized(isInForeground) {
+            isInForeground = true
+        }
         populateFriendData()
+        CoreService.getInstance()?.fetchPendingRequestsRemote(this)
     }
 
     override fun onPause() {
+        synchronized(isInForeground) {
+            isInForeground = false
+        }
         super.onPause()
         CoreService.getInstance()?.unregisterMonitorUnreadMessages()
     }
@@ -114,12 +125,13 @@ class HomeActivity : AppCompatActivity() {
             ) {
                 val body = response?.body()
                 Log.d(TAG, "GetAllFriends ResponseCode: ${response?.code()}")
+                Log.d(TAG, "FriendList: $body")
 
                 if ((response?.code()?:0) == 200) {
                     //tv_username.text = "Welcome\n${body?.name}"
                     //mFriendList = body?.friendList
                     mFriendList.clear()
-                    body?.friendList?.forEach {
+                    body?.returnList?.forEach {
                         mFriendList.add(HomeFriendList(it.name, it.phoneNumber, it._id, 0))
                     }
                     populateFriendList()
@@ -141,5 +153,34 @@ class HomeActivity : AppCompatActivity() {
 
     fun fabAddFriend(view: View) {
         startActivity(Intent(this, FindFriendActivity::class.java))
+    }
+
+    override fun onjobcompleted(status: Int) {
+        var pendingRequestList = CoreService.getInstance()?.mPendingRequestList
+        if (pendingRequestList == null || pendingRequestList.isEmpty()) {
+            Log.d(TAG, "No pending requests.")
+            return
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            ll_home_username.setOnClickListener {
+                ll_home_username.setOnClickListener(null)
+                startPendingRequestActivity()
+            }
+            iv_request_flicker.visibility = View.VISIBLE
+            while (isInForeground) {
+                iv_request_flicker.setImageResource(R.drawable.ic_person_solid_primary_color)
+                delay(Constants.DELAY_PENDING_FLICKERING)
+                iv_request_flicker.setImageResource(R.drawable.ic_person_stroke_primary_color)
+                delay(Constants.DELAY_PENDING_FLICKERING)
+            }
+            iv_request_flicker.visibility = View.GONE
+        }
+    }
+
+    fun startPendingRequestActivity() {
+        isRequestActivityOpened = true
+        val intent = Intent(this, PendingRequestListActivity::class.java)
+        intent.putExtra(Constants.KEY_USERNAME, mUserDetails?.name)
+        startActivity(intent)
     }
 }

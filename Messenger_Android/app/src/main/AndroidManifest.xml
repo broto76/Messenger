@@ -13,19 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".FindFriendActivity"></activity>
-        <activity android:name=".ChatDataActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".PendingRequestListActivity"></activity>
+        <activity android:name=".FindFriendActivity" />
+        <activity
+            android:name=".ChatDataActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name=".services.CoreService"
-            android:launchMode="singleTop"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop" />
 
         <activity android:name=".HomeActivity" />
-        <activity android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
