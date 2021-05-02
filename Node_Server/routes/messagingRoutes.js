@@ -14,9 +14,9 @@ messagingRouter.get('/allFriends', authMiddleware, messageController.getAllFrien
 messagingRouter.get('/userDetails', authMiddleware, messageController.getCurrentUserDetails);
 // getUserDetails (param: remoteuser._id)
 messagingRouter.get('/userDetails/:userId', authMiddleware, messageController.getUserDetails);
-
 messagingRouter.get('/userDetailsFromNumber/:phoneNumber', authMiddleware, messageController.getUserDetailsLimited);
 
+messagingRouter.get('/allRequests', authMiddleware, messageController.getAllFriendRequests);
 
 
 module.exports = messagingRouter;

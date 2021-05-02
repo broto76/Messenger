@@ -243,3 +243,24 @@ exports.getUserDetailsLimited = async (req, res, next) => {
         statusOwner: statusOwner
     });
 }
+
+
+exports.getAllFriendRequests = async (req, res, next) => {
+    const user = await User.findById(req.user._id).populate('messageRequestList.remoteUser');
+
+    let returnList = [];
+    user.messageRequestList.forEach(item => {
+        if (item.isOwner == false && item.status == UserStatus.Requested) {
+            returnList.push({
+                remoteUserId: item.remoteUser._id,
+                remoteUserName: item.remoteUser.name,
+                remoteUserPhoneNumber: item.remoteUser.phoneNumber,
+                status: item.status
+            });
+        }
+    });
+
+    res.status(200).json({
+        returnList: returnList
+    });
+}
