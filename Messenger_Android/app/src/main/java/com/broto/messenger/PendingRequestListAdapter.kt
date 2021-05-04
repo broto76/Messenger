@@ -15,7 +15,6 @@ import com.broto.messenger.jsonResponseModels.PostAcceptMessageRequest
 import com.broto.messenger.jsonResponseModels.PostAcceptMessageResponse
 import com.broto.messenger.retrofitServices.UserdataService
 import com.broto.messenger.retrofitServices.Utility
-import kotlinx.android.synthetic.main.activity_find_friend.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

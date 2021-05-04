@@ -12,4 +12,5 @@
     <string name="signup">Sign Up !</string>
 
     <string name="error_input_empty">This field cannot be empty</string>
+
 </resources>

@@ -30,13 +30,15 @@ class HomeActivity : AppCompatActivity(), CoreService.JobCompleteCallback {
     private var friendListAdapter: FriendChatListAdapter? = null
 
     var isInForeground = false
-    var isRequestActivityOpened = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         ll_home_username.visibility = View.INVISIBLE
+        ll_home_username.setOnClickListener {
+            startNotificationsActivity()
+        }
 
         populateUserName()
 
@@ -151,10 +153,6 @@ class HomeActivity : AppCompatActivity(), CoreService.JobCompleteCallback {
         }
     }
 
-    fun fabAddFriend(view: View) {
-        startActivity(Intent(this, FindFriendActivity::class.java))
-    }
-
     override fun onjobcompleted(status: Int) {
         var pendingRequestList = CoreService.getInstance()?.mPendingRequestList
         if (pendingRequestList == null || pendingRequestList.isEmpty()) {
@@ -162,10 +160,6 @@ class HomeActivity : AppCompatActivity(), CoreService.JobCompleteCallback {
             return
         }
         CoroutineScope(Dispatchers.Main).launch {
-            ll_home_username.setOnClickListener {
-                ll_home_username.setOnClickListener(null)
-                startPendingRequestActivity()
-            }
             iv_request_flicker.visibility = View.VISIBLE
             while (isInForeground) {
                 iv_request_flicker.setImageResource(R.drawable.ic_person_solid_primary_color)
@@ -177,9 +171,8 @@ class HomeActivity : AppCompatActivity(), CoreService.JobCompleteCallback {
         }
     }
 
-    fun startPendingRequestActivity() {
-        isRequestActivityOpened = true
-        val intent = Intent(this, PendingRequestListActivity::class.java)
+    private fun startNotificationsActivity() {
+        val intent = Intent(this, NotificationsActivity::class.java)
         intent.putExtra(Constants.KEY_USERNAME, mUserDetails?.name)
         startActivity(intent)
     }

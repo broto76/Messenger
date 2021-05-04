@@ -4,7 +4,7 @@ class Constants {
     companion object {
 
         const val DELAY_PENDING_FLICKERING: Long = 600
-        const val DELAY_ERROR_MESSAGE: Long = 3000
+        const val DELAY_ERROR_MESSAGE: Long = 2000
 
         const val FIREBASE_DATABASE = "https://messenger-e83e4-default-rtdb.europe-west1.firebasedatabase.app/"
 

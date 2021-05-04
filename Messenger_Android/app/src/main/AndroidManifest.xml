@@ -13,8 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PendingRequestListActivity"></activity>
-        <activity android:name=".FindFriendActivity" />
+        <activity android:name=".NotificationsActivity" />
         <activity
             android:name=".ChatDataActivity"
             android:windowSoftInputMode="adjustResize" />

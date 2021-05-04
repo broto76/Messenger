@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotificationsActivity">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs_main_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabMaxWidth="0dp"
+        app:tabIconTint="@color/colorPrimaryDark"
+        android:background="@android:color/white"
+        app:tabIndicatorColor="@color/colorPrimaryDark"
+        />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_main_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabs_main_notification"
+        />
+
+</RelativeLayout>

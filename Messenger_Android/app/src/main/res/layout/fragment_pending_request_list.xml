@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".HomeActivity">
+    tools:context=".fragments.PendingRequestListFragment">
 
     <RelativeLayout
-        android:layout_alignParentTop="true"
-        android:id="@+id/rl_home_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryUltraLight">
 
         <LinearLayout
-            android:id="@+id/ll_home_username"
+            android:id="@+id/ll_pending_request_summary_group"
             android:layout_alignParentTop="true"
             android:padding="10dp"
             android:layout_margin="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/home_username_bg"
+            android:background="@drawable/notification_username_bg"
             >
 
             <TextView
+                android:id="@+id/tv_pending_request_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Welcome"
@@ -34,10 +33,10 @@
                 />
 
             <TextView
-                android:id="@+id/tv_username"
+                android:id="@+id/tv_pending_request_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="New Requests: "
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:textColor="@color/colorAccentDark"
@@ -47,25 +46,13 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_request_flicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_person_solid_primary_color"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:visibility="gone"
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@id/ll_pending_request_summary_group"
+            android:id="@+id/rv_pending_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             />
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_margin="10dp"
-        android:layout_below="@id/rl_home_username"
-        android:id="@+id/rv_friend_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
-</RelativeLayout>
+</FrameLayout>
