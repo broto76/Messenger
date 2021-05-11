@@ -81,19 +81,6 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/et_signup_name"
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColorHint="@color/colorPrimaryLight"
-            android:hint="@string/name"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:inputType="text"
-            />
-
-        <EditText
             android:id="@+id/et_signup_number"
             android:layout_margin="10dp"
             android:layout_width="match_parent"
@@ -104,6 +91,35 @@
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
             android:inputType="number"
+            android:maxLength="10"
+            />
+
+        <EditText
+            android:id="@+id/et_otp"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColorHint="@color/colorPrimaryLight"
+            android:hint="@string/otp"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:inputType="number"
+            android:visibility="gone"
+            />
+
+        <EditText
+            android:id="@+id/et_signup_name"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColorHint="@color/colorPrimaryLight"
+            android:hint="@string/name"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:inputType="text"
+            android:visibility="gone"
             />
 
         <EditText
@@ -117,9 +133,11 @@
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
             android:inputType="textPassword"
+            android:visibility="gone"
             />
 
         <Button
+            android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/signup"
@@ -129,6 +147,35 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:onClick="processSignUp"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/btn_signup_send_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_otp"
+            android:background="@drawable/button_background_curved_rectangle"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:onClick="processVerifyPhoneNumber"
+            android:visibility="visible"
+            />
+
+        <Button
+            android:id="@+id/btn_signup_verify_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verify_otp"
+            android:background="@drawable/button_background_curved_rectangle"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:onClick="processVerifyOTP"
+            android:visibility="gone"
             />
 
         <TextView
@@ -140,6 +187,18 @@
             android:layout_gravity="center"
             android:layout_margin="20dp"
             android:onClick="switchToLogin"
+            />
+
+        <TextView
+            android:id="@+id/tv_signup_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This will be invisible"
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
             />
 
     </LinearLayout>

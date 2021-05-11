@@ -176,4 +176,8 @@ class HomeActivity : AppCompatActivity(), CoreService.JobCompleteCallback {
         intent.putExtra(Constants.KEY_USERNAME, mUserDetails?.name)
         startActivity(intent)
     }
+
+    fun testClick(view: View) {
+        startActivity(Intent(this, TestActivity::class.java))
+    }
 }
