@@ -1,17 +1,17 @@
 # Messenger
 This a full stack three way architecture involving Firebase, Nodejs and Kotlin based Android, to create a P2P messaging application. 
-
-<img src=https://nodejs.org/static/images/logos/nodejs-new-pantone-black.svg width="100" style="margin:30px 30px" />
-
-<img src=https://www.pngix.com/pngfile/big/213-2134143_kotlin-logo-png-transparent-kotlin-logo-png-png.png width="100" style="margin:30px 30px" />
-
-<br>
-
-<img src=https://developer.android.com/images/brand/Android_Robot.svg width="100" style="margin:30px 30px" />
-
-<img src=https://firebase.google.com/images/brand-guidelines/logo-built_black.png width="100" style="margin:30px 30px" />
-
 <br><br>
+
+## Technologies Used:
+<br>
+<img align="left" src="https://img.icons8.com/color/32/kotlin.png"/>
+<img align="left" src="https://img.icons8.com/color/32/000000/android-os.png"/>
+<img align="left" src="https://img.icons8.com/color/32/000000/firebase.png"/>
+<img align="left" src="https://img.icons8.com/color/32/nodejs.png"/>
+<img align="left" src="https://img.icons8.com/color/32/000000/mongodb.png"/>
+<img align="left" src="https://img.icons8.com/color/32/000000/heroku.png"/>
+
+<br><br><br>
 
 This application provides the following features:
 * Users can signup after their number is verified via Firebase Authentication.
