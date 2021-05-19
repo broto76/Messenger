@@ -1,15 +1,15 @@
 # Messenger
-This a full stack three way architecture involving Firebase, Nodejs and Kotlin based Android, to create a messaging application. 
+This a full stack three way architecture involving Firebase, Nodejs and Kotlin based Android, to create a P2P messaging application. 
 
-<img src=https://nodejs.org/static/images/logos/nodejs-new-pantone-black.svg width="150" style="margin:30px 30px" />
+<img src=https://nodejs.org/static/images/logos/nodejs-new-pantone-black.svg width="100" style="margin:30px 30px" />
 
-<img src=https://www.pngix.com/pngfile/big/213-2134143_kotlin-logo-png-transparent-kotlin-logo-png-png.png width="150" style="margin:30px 30px" />
+<img src=https://www.pngix.com/pngfile/big/213-2134143_kotlin-logo-png-transparent-kotlin-logo-png-png.png width="100" style="margin:30px 30px" />
 
 <br>
 
-<img src=https://developer.android.com/images/brand/Android_Robot.svg width="150" style="margin:30px 30px" />
+<img src=https://developer.android.com/images/brand/Android_Robot.svg width="100" style="margin:30px 30px" />
 
-<img src=https://firebase.google.com/images/brand-guidelines/logo-built_black.png width="150" style="margin:30px 30px" />
+<img src=https://firebase.google.com/images/brand-guidelines/logo-built_black.png width="100" style="margin:30px 30px" />
 
 <br><br>
 
@@ -22,16 +22,19 @@ This application provides the following features:
 
 <br><br>
 
-How to use the code:
+## Code Useage:
 1. Checkout this git repo.
-2. Initialize Node library using the following commands:<br><code>cd Node_Server<br>npm install</code>
+2. Initialize Node library using the following commands:
+```console 
+cd Node_Server
+npm install
+```
 3. Open Messenger_Android dir using Android studio to resolve dependencies from gradle.
 4. Customize either server logic or Android behaviour and enjoy messaging.
 
 <br><br>
 
-This solution uses the following architecture:
-<br>
+## Architecture:
 <img src=https://raw.githubusercontent.com/broto76/Messenger/main/Messenger_Arch.png style="margin:30px 30px" />
 
 <br><br>
